@@ -1,40 +1,52 @@
 <?php include_once "../../includes/header.php"; ?>
 
 <style>
-        header,.fff {
-                background-color: #fff !important;
-        }
+:root {
+    --primary-color: #1a56db;
+    --secondary-color: #4b5563;
+    --background-color: #f9fafb;
+    --border-color: #e5e7eb;
+    --text-color: #111827;
+    --hover-color: #1e40af;
+    --accent-color: #3b82f6;
+}
 
-        article.inside-info {
-                margin-top: 20px;
-        }
+:root[data-theme="dark"] {
+    --primary-color: #60a5fa;
+    --secondary-color: #9ca3af;
+    --background-color: #111827;
+    --border-color: #374151;
+    --text-color: #f9fafb;
+    --hover-color: #3b82f6;
+    --accent-color: #60a5fa;
+}
 
-        /* section { */
-        /* article { */
-        /* article > p {
-                padding: 0;
-                margin: 0;
-                border: 1px solid #999;
-        } */
+header,.fff {
+    background-color: var(--background-color) !important;
+}
 
-        button.btn {
-                margin: 3px 0;
-        }
+article.inside-info {
+    margin-top: 20px;
+}
 
-        p.fw-normal {
-                margin-bottom: 5px;
-        }
-        
-        section {
-                margin-bottom: 10px;
-        }
+button.btn {
+    margin: 3px 0;
+}
 
-        article {
-                margin-bottom: 5px;
-        }
+p.fw-normal {
+    margin-bottom: 5px;
+}
+
+section {
+    margin-bottom: 10px;
+}
+
+article {
+    margin-bottom: 5px;
+}
 </style>
 
-<div class="border my-4 mx-4 p-4 rounded-3 fff">
+<div class="border my-4 mx-auto p-4 rounded-3 fff" style="width: 90%;">
 
         <p class="fw-bold fs-4 d-flex align-items-center">
                 <button class="btn border mx-2">
@@ -121,7 +133,7 @@
                                         customer.
                                 </p>
 
-                                <button class="btn btn-sm btn-success py-2 px-3">Learn More</button>
+                                <button class="btn btn-sm btn-primary py-2 px-3">Learn More</button>
 
                                 <article class="inside-info">
                                         <p class="fs-6 fw-bold"> Payments </p>
@@ -311,7 +323,7 @@
                         for quick, attractive invoices generated from your code.
                 </p>
 
-                <button class="btn btn-sm btn-success py-2 px-3">API Documentation</button>
+                <button class="btn btn-sm btn-primary py-2 px-3">API Documentation</button>
 
         </section>
 

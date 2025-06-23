@@ -1,241 +1,211 @@
 <?php
-
 include_once "../../includes/header.php";
 $invoice_id = $_REQUEST['invoice_id'];
 require_once "../app/invoice.php";
 
-
-// echo $invoice_id;
 $invoice = new Invoice();
-
 $invoice_data = $invoice->fetch_invoice($invoice_id);
-
-
 ?>
 
 <style>
-        .fff,
-        header {
-                background-color: #fff !important;
+        :root {
+            --primary-color: #1a56db;
+            --secondary-color: #4b5563;
+            --background-color: #f9fafb;
+            --border-color: #e5e7eb;
+            --text-color: #111827;
+            --hover-color: #1e40af;
+            --accent-color: #3b82f6;
         }
 
-        button.btn {
-                margin: 3px 0;
+        :root[data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --secondary-color: #9ca3af;
+            --background-color: #1f2937;
+            --border-color: #374151;
+            --text-color: #f3f4f6;
+            --hover-color: #60a5fa;
+            --accent-color: #60a5fa;
         }
+    .thanks-container {
+        max-width: 1000px;
+        margin: 3rem auto;
+        padding: 2.5rem;
+        /* background: var(--white); */
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .thanks-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .success-banner {
+        background: var(--light-gray);
+        border: 1px solid var(--border-color);
+        color: var(--success);
+        padding: 1.5rem;
+        border-radius: 6px;
+        margin: 2rem 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .success-banner i {
+        font-size: 1.5rem;
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+    .info-card {
+        background: var(--background-color);
+        padding: 1.5rem;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+    }
+    .info-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .info-card-header i {
+        color: var(--accent-color);
+        font-size: 1.25rem;
+    }
 
-        p.fw-normal {
-                margin-bottom: 5px;
-        }
+    .text-color {
+        color: var(--text-color);
+    }
 
-        section {
-                /* margin: 10px 0; */
-                margin-top: 20px;
-                margin-bottom: 10px;
-        }
-
-        button.social-btn {
-                width: 100px !important;
-                /* display: flex !important; */
-                justify-content: space-around !important;
-        }
+    .action-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+    .action-button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+    }
+    .action-button i {
+        font-size: 1rem;
+    }
+    .cta-section {
+        background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+        color: var(--text-color);
+        padding: 2rem;
+        border-radius: 8px;
+        margin: 2rem 0;
+        text-align: center;
+    }
+    .social-share {
+        background: var(--background-color);
+        padding: 2rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin-top: 2rem;
+    }
+    .social-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    .social-btn {
+        padding: 0.75rem 1.25rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        flex: 1;
+        min-width: 140px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
 </style>
 
-<div class="border my-4 mx-4 p-4 rounded-3 fff">
-        <p class="fw-bold fs-4">Thank you for invoicing with us!</p>
-        <p class="fw-normal text-white bg-success border rounded-2 py-2 px-3" style="font-size: 18px;">Your invoice has
-                been generated! If the invoice did
-                not open automatically then you can find it in your Downloads folder.
-        </p>
+<div class="thanks-container">
+    <div class="thanks-header">
+        <h1 class="h2 fw-bold mb-2">Invoice Generated Successfully</h1>
+        <p class="mb-0 text-color">Your invoice has been created and is ready for use</p>
+    </div>
 
-        <p class="fw-normal fs-6 text-secondary"> <span style="margin-right: 2px;"><i
-                                class="fa-solid fa-circle-info"></i></span> A copy has also been saved to your device.
-                You can return to the History page any time to make changes to your invoice. It is strongly recommended
-                that you retain a copy of the generated PDF for your records.
-        </p>
-
-        <section class="new">
-                <p class="fs-5 fw-bold text-dark">What's Next?</p>
-                <div class="new-btn-section">
-                        <button class="btn btn-sm btn-outline-secondary px-3 py-2"><i
-                                        class="fa-solid fa-pen-to-square"></i>Edit Invoice</button>
-                        <button class="btn btn-sm btn-outline-secondary px-3 py-2">Go to History</button>
-                        <button class="btn btn-sm btn-success px-3 py-2">New Invoice</button>
-                </div>
-        </section>
-
-        <?php
-        if (!isset($_SESSION['email'])) {
-                ?>
-                <section class="signup">
-                        <p class="fs-5 fw-bold text-dark">Need more features?</p>
-                        <p class="fw-normal text-secondary" style="font-size: 19px;">Create a free Invoice-Generator.com account
-                                to gain access to more features, like sending invoices, adding a Pay Invoice button, and
-                                accessing your invoices on any device.
-                        </p>
-
-                        <button class="btn btn-md btn-success px-3 py-2 d-block">sign Up</button>
-                </section>
-                <?php
-        }
-        ?>
-
-
-        <section class="social-me">
-                <p class="fs-5 fw-bold text-dark">Love using Invoice Generator?</p>
-                <p class="fw-normal text-secondary" style="font-size: 19px;">Tell your friends!
-                </p>
-
-                <button class="btn btn-md btn-success px-3 justify-content-around col-1">
-                        <i class="fa-brands fa-whatsapp"></i>
-                        <span class="btn-title mx-auto"> Share</span>
-                </button>
-                <button class="btn btn-md btn-primary px-3 justify-content-around col-1">
-                        <i class="fa-brands fa-facebook-f"></i>
-                        <span class="btn-title mx-auto"> Share</span>
-                </button>
-                <button class="btn btn-md btn-danger px-3 justify-content-around col-1">
-                        <i class="fa-brands fa-reddit-alien"></i>
-                        <span class="btn-title mx-auto"> Share</span>
-                </button>
-                <button class="btn btn-md btn-dark px-3 justify-content-around col-1">
-                        <i class="fa-brands fa-x-twitter"></i>
-                        <span class="btn-title mx-auto"> Tweet</span>
-                </button>
-                <button class="btn btn-md btn-secondary px-3 justify-content-around col-1">
-                        <i class="fa-solid fa-envelope"></i>
-                        <span class="btn-title mx-auto"> Email</span>
-                </button>
-                <button class="btn btn-md btn-danger px-3 justify-content-around col-1">
-                        <i class="fa-brands fa-pinterest-p"></i>
-                        <span class="btn-tit mx-autole"> Pin</span>
-                </button>
-        </section>
-
-</div>
-
-<?php include_once "../../includes/footer.php"; 
-
-
-$html = '
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice</title>
-</head>
-
-<body style="background-color: #f8f9fa; font-family: Arial, sans-serif; line-height: 1.3; margin: 0; padding: 0; box-sizing: border-box;">
-    <div style="width: 100%; max-width: 1200px; padding: 10px 20px; background-color: #fff; border-radius: 10px;">
-        <div style="display: table; width: 100%; margin-bottom: 20px;">
-                <div style="display: table-cell; width: 50%; vertical-align: middle;">
-                        <img src="company_logo/' . htmlspecialchars($invoice_data['invoice_logo']) . '" style="max-height: 100px;" />
-                </div>
-                <div style="display: table-cell; width: 50%; text-align: right; vertical-align: middle;">
-                        <h1 style="font-size: 32px; color: #333; margin-top: 7px;">' . htmlspecialchars($invoice_data['company_name']) . '</h1>
-                        <p style="font-size: 16px; color: #777; margin-top: 7px;">#' . htmlspecialchars($invoice_data['invoice_number']) . '</p>
-                </div>
-        </div>
-
-        <div style="display: table; width: 100%; margin-top: 30px;">
-                <div style="display: table-cell; width: 50%; vertical-align: middle;">
-                        <div style="font-weight: bold; color: #333;">From</div>
-                        <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['invoice_from']) . '</div>
-                </div>
-                <div style="display: table-cell; width: 50%; vertical-align: middle; text-align: right;">
-                        <div style="font-weight: bold; color: #333;">To</div>
-                        <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['bill_to']) . '</div>
-                </div>
-        </div>
-
-        <div style="display: table; width: 100%; margin-top: 30px;">
-                <div style="display: table-cell; width: 50%; vertical-align: middle;">
-                        <div style="font-weight: bold; color: #333;">Ship To</div>
-                        <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['ship_to']) . '</div>
-                </div>
-                <div style="display: table-cell; width: 50%; vertical-align: middle;  text-align: right;">
-                        <div style="font-weight: bold; color: #333;">Date</div>
-                        <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['invoice_date']) . '</div>
-                </div>
-        </div>
-
-        <div style="margin-top: 20px;">
-                <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
-                        <thead>
-                                <tr>
-                                        <th style="padding: 12px; text-align: left; background-color: #f9f9f9;">Item</th>
-                                        <th style="padding: 12px; text-align: left; background-color: #f9f9f9; text-align: end;">Quantity</th>
-                                        <th style="padding: 12px; text-align: left; background-color: #f9f9f9; text-align: end;">Rate</th>
-                                        <th style="padding: 12px; text-align: left; background-color: #f9f9f9; text-align: end;">Amount</th>
-                                </tr>
-                        </thead>
-                        <tbody>';
-
-foreach ($invoice_data['items'] as $item) {
-        $html .= '
-                        <tr>
-                                <td style="font-size: 14px; color: #555; padding: 12px;">' . htmlspecialchars($item['item_name']) . '</td>
-                                <td style="font-size: 14px; color: #555; padding: 12px; text-align: end;">' . htmlspecialchars($item['item_quantity']) . '</td>
-                                <td style="font-size: 14px; color: #555; padding: 12px; text-align: end;">$' . htmlspecialchars(number_format($item['item_amount'], 2)) . '</td>
-                                <td style="font-size: 14px; color: #555; padding: 12px; text-align: end;">$' . htmlspecialchars(number_format($item['item_total'], 2)) . '</td>
-                        </tr>';
-}
-
-$html .= '
-                        </tbody>
-                </table>
-
-                <div style="text-align: right; padding: 20px;">
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Subtotal</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['subtotal'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Discount</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['discount'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Tax</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['tax_charge'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Shipping</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['shipping_charge'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block; font-weight: bold;">Total</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right; font-weight: bold;">$' . htmlspecialchars(number_format($invoice_data['total_amount'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Amount Paid</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['paid_amount'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block; font-weight: bold;">Balance Due</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right; font-weight: bold;">$' . htmlspecialchars(number_format($invoice_data['remainig_amount'], 2)) . '</span>
-                        </div>
-                </div>
-        </div>
-
-        <div style="margin-top: 20px;">
-                <div style="font-weight: bold; color: #333;">Notes</div>
-                <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['notes']) . '</div>
-        </div>
-
-        <div style="margin-top: 20px;">
-                <div style="font-weight: bold; color: #333;">Terms</div>
-                <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['terms']) . '</div>
+    <div class="success-banner">
+        <i class="fa-solid fa-circle-check"></i>
+        <div>
+            <h4 class="h6 fw-bold mb-1">Invoice #<?php echo $invoice_id; ?> Created</h4>
+            <p class="mb-0 text-color">Your invoice has been generated and saved to your account</p>
         </div>
     </div>
-</body>
 
-</html>';
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="info-card-header">
+                <i class="fa-solid fa-download"></i>
+                <h4 class="h6 fw-bold mb-0">Download Invoice</h4>
+            </div>
+            <p class="mb-0 text-color">Download your invoice as PDF for your records or to send to your client</p>
+        </div>
+        
+        <div class="info-card">
+            <div class="info-card-header">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <h4 class="h6 fw-bold mb-0">Access Anytime</h4>
+            </div>
+            <p class="mb-0 text-color">Your invoice is securely stored and accessible from your history</p>
+        </div>
+    </div>
 
-?>
+    <div class="action-buttons">
+        <a href="temp.php?invoice_id=<?php echo $invoice_id; ?>" class="action-button btn btn-outline-primary">
+            <i class="fa-solid fa-pen-to-square"></i>View Invoice
+        </a>
+        <a href="invoices.php" class="action-button btn btn-outline-secondary">
+            <i class="fa-solid fa-clock-rotate-left"></i>View History
+        </a>
+        <a href="create.php" class="action-button btn btn-primary">
+            <i class="fa-solid fa-plus"></i>Create New Invoice
+        </a>
+    </div>
 
-<script>
-        setInterval(() => {
-                $check = $invoice->download($html); 
-        }, 2000);
-</script>
+    <?php if (!isset($_SESSION['email'])): ?>
+    <div class="cta-section">
+        <h3 class="h4 fw-bold mb-3">Unlock Premium Features</h3>
+        <p class="mb-4 text-color">Create a free account to access your invoices and save them to your account.</p>
+        <a href="../auth/register.php" class="btn btn-light btn-lg px-4">Create Free Account</a>
+    </div>
+    <?php endif; ?>
+
+    <div class="social-share">
+        <h3 class="h5 fw-bold mb-2">Share Invoice Generator</h3>
+        <p class="text-muted mb-3 text-color">Help others discover our professional invoicing tool</p>
+        
+        <div class="social-buttons">
+            <a href="#" class="social-btn btn btn-success">
+                <i class="fa-brands fa-whatsapp"></i>WhatsApp
+            </a>
+            <a href="#" class="social-btn btn btn-primary">
+                <i class="fa-brands fa-facebook-f"></i>Facebook
+            </a>
+            <a href="#" class="social-btn btn btn-info text-white">
+                <i class="fa-brands fa-linkedin-in"></i>LinkedIn
+            </a>
+            <a href="#" class="social-btn btn btn-dark">
+                <i class="fa-brands fa-x-twitter"></i>Twitter
+            </a>
+        </div>
+    </div>
+</div>
+
+<?php include_once "../../includes/footer.php"; ?>

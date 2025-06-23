@@ -28,14 +28,13 @@ function addRow() {
                                                                                 </div>
                                                                         </td>
                                                                         <td class="border-0 text-center align-middle">
-                                                                                <span id="item_total"
-                                                                                        class="item-total"> <span class="currency_sign">₹</span> 0.00</span>
+                                                                                <span class="currency_sign">₹</span>
+                                                                                <input class="item-total input-item-total" value="0.00" readonly>
+                                                                                </span>
                                                                         </td>
                                                                 </tr>
         `;
 
-    tableRows.innerHTML += content;
+    tableRow
 }
-
-// dynamic amount display.
 

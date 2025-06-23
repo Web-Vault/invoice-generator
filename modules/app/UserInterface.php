@@ -7,6 +7,7 @@ interface UserInterface
         public function login($email, $pass);
         public function update_profile($new_email = "", $new_pass = "");
         public function update_name($firstname = "", $lastname = "");
+        public function fetch_all();
 }
 
 ?>

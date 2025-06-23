@@ -3,277 +3,318 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Invoice Generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator | Professional Invoicing Solution</title>
 
-        <!-- Bootstrap -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-                integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-                crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-                crossorigin="anonymous"></script>
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-                crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-                integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-                crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="../../assets/173745502034560481.png" type="image/x-icon">
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a56db;
+            --secondary-color: #4b5563;
+            --background-color: #f9fafb;
+            --border-color: #e5e7eb;
+            --text-color: #111827;
+            --hover-color: #1e40af;
+            --accent-color: #3b82f6;
+        }
 
+        :root[data-theme="dark"] {
+            --primary-color: #60a5fa;
+            --secondary-color: #9ca3af;
+            --background-color: #111827;
+            --border-color: #374151;
+            --text-color: #fff;
+            --hover-color: #3b82f6;
+            --accent-color: #60a5fa;
+        }
 
-        <!-- Bootstrap Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+        body {
+            background-color: var(--background-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s ease;
+        }
 
+        .header {
+            background: var(--background-color);
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
 
-        <!-- FontAwsome -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-                integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
-                crossorigin="anonymous" referrerpolicy="no-referrer" />
+        .navbar {
+            padding: 0.75rem 0;
+            /* max-width: 1280px; */
+            margin: 0 auto;
+        }
 
-        <!-- JQuery -->
-        <script src="https://code.jquery.com/jquery-3.7.1.js"
-                integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        .navbar-brand {
+            padding: 0;
+            margin-right: 3rem;
+        }
 
+        .navbar-brand img {
+            height: 36px;
+            width: auto;
+        }
 
-        <style>
-                /* DARK */
+        .nav-link {
+            color: var(--secondary-color);
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease;
+            border-radius: 0.375rem;
+            margin: 0 0.25rem;
+        }
 
-                /* header,
-                .learn-more-banner {
-                        background-color: #fff;
-                } */
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--background-color);
+        }
 
-                body {
-                        background-color: #f9f9f9;
-                        font-family: "Inter", sans-serif !important;
-                }
+        .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(59, 130, 246, 0.1);
+        }
 
-                .nav-item>a:hover {
-                        color: green !important;
-                }
+        .btn {
+            padding: 0.625rem 1.25rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
 
-                /* main content styles */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
 
-                .col,
-                .row {
-                        margin: 0;
-                        padding: 0;
-                }
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+        }
 
-                input[type="file"] {
-                        display: none;
-                }
+        .btn-outline-secondary {
+            border-color: var(--border-color);
+            color: var(--secondary-color);
+        }
 
-                .upload-box {
-                        display: flex;
-                        margin: auto 0 !important;
-                        align-items: center;
-                        justify-content: center;
-                        width: 230px;
-                        height: 120px;
-                        border: 1px solid #bbb;
-                        border-radius: 5px;
-                        background-color: #eee;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                }
+        .btn-outline-secondary:hover {
+            background-color: var(--background-color);
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
 
-                .upload-box:hover {
-                        background-color: #ddd;
-                        border-color: #555;
-                }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            background: var(--background-color);
+            color: var(--text-color);
+        }
 
-                .input-field {
-                        padding: 8px !important;
-                        justify-content: flex-start;
-                        background: none;
-                        font-size: 12px;
-                }
+        .user-profile:hover {
+            background-color: var(--background-color);
+            border-color: var(--accent-color);
+        }
 
+        .icon-button {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            color: var(--secondary-color);
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
 
+        .icon-button:hover {
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            border-color: var(--accent-color);
+        }
 
-                .add-options>span {
-                        cursor: pointer;
-                }
+        .popover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
 
-
-
-                /* footer styles */
-                .footer {
-                        padding-top: 50px;
-                        border-top: 1px solid #aaa;
-                }
-
-                .footer>ul>th {
-                        background: none !important;
-                        /* background: none !important; */
-                }
-
-                .footer-li {
-                        background: none !important;
-                        color: #212529;
-                        padding: 3px;
-                        margin: auto 15px;
-                        transition: color all 0.3s;
-                }
-
-                .fs-6 {
-                        font-size: 15px !important;
-                }
-
-                .footer-li:hover .footer_a {
-                        color: #198754 !important;
-                }
-
-                .cc-text {
-                        font-size: 13px;
-                }
-
-                .sm-icons {
-                        font-size: 30px;
-                        padding: 0 5px;
-                        cursor: pointer;
-                }
-
-                .ft-links {
-                        margin-top: 8px;
-                }
-
-                .ft-links>a:hover {
-                        color: #198754 !important;
-                }
-
-                .hvr:hover {
-                        cursor: pointer;
-                }
-        </style>
-
+        .dropdown-menu {
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+    </style>
 </head>
 
 <body>
-        <header class="header px-3" style="box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
-                <nav class="navbar navbar-expand-lg">
-                        <div class="container-fluid">
-                                <a href="../invoice/create.php" class="navbar-brand">
-                                        <img src="../../includes/invoice_svg.svg" alt="logo" height="28" class="img">
+    <header class="header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a href="../invoice/create.php" class="navbar-brand d-flex align-items-center gap-2">
+                    <img src="../../assets/173745502034560481.png" alt="Invoice Generator" class="img-fluid">
+                    <span class="fw-semibold" style="font-size: 1.5rem; color: var(--text-color);">Invoice Edge</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto">
+                        <?php if (isset($_SESSION['email'])): ?>
+                            <li class="nav-item">
+                                <a href="invoices.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'invoices.php' ? 'active' : ''; ?>">
+                                    <i class="fa-regular fa-file-lines me-2"></i>My Invoices
                                 </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="settings.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">
+                                    <i class="fa-regular fa-gear me-2"></i>Settings
+                                </a>
+                            </li>
+                        <?php else: ?>
+                            <li class="nav-item">
+                                <a href="../invoice/help.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'help.php' ? 'active' : ''; ?>">
+                                    <i class="fa-regular fa-circle-question me-2"></i>Help
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../invoice/history.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'history.php' ? 'active' : ''; ?>">
+                                    <i class="fa-regular fa-clock me-2"></i>History
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa-regular fa-book me-2"></i>Invoicing Guide
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
 
-                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#navbarContent" aria-controls="navbarContent"
-                                        aria-expanded="false" aria-label="Toggle navigation">
-                                        <span class="navbar-toggler-icon"></span>
-                                </button>
+                    <div class="d-flex align-items-center gap-3">
+                       
+                        <button class="icon-button" id="themeToggle" title="Toggle Theme">
+                            <i class="fa-solid fa-sun" id="themeIcon"></i>
+                        </button>
 
-                                <div class="collapse navbar-collapse" id="navbarContent">
-                                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <?php if (isset($_SESSION['email'])): ?>
+                            <?php
+                                require_once "../../modules/app/connect.php";
+                                $connect = new connect();
+                                $db = $connect->connect_db();
+                                $em = $_SESSION['email'];
+                                $sql = "SELECT `firstname`,`lastname` FROM `users` WHERE `email` = '$em'";
+                                $res = $db->query($sql);
+                                $row = $res->fetch_assoc();
+                            ?>
+                            <div class="user-profile" id="toggle">
+                                <span class="fw-medium"><?php echo $row['firstname'] . " " . $row['lastname']; ?></span>
+                                <i class="fa-solid fa-angle-down text-secondary"></i>
+                            </div>
+                        <?php else: ?>
+                            <a href="../../modules/auth/login.php" class="btn btn-outline-secondary">Sign In</a>
+                            <a href="../../modules/auth/signup.php" class="btn btn-primary">Sign Up</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-                                                <?php
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            // Check for saved theme preference
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
 
-                                                if (isset($_SESSION['email'])) {
-                                                        ?>
-                                                        <li class="nav-item mx-2" style="font-size: 15px;">
-                                                                <a href="invoices.php" class="nav-link text-secondary">My
-                                                                        Invoices</a>
-                                                        </li>
-                                                        <li class="nav-item mx-2" style="font-size: 15px;">
-                                                                <a href="settings.php"
-                                                                        class="nav-link text-secondary">Settings</a>
-                                                        </li>
-                                                        <!-- <a href="#" class="btn btn-success text-white"> <i
-                                                                        class="fa-regular fa-star"></i> Upgrade</a> -->
-                                                        <?php
-                                                } else {
-                                                        ?>
-                                                        <li class="nav-item mx-3" style="font-size: 15px;">
-                                                                <a href="../invoice/help.php"
-                                                                        class="nav-link text-secondary">Help</a>
-                                                        </li>
-                                                        <li class="nav-item mx-2" style="font-size: 15px;">
-                                                                <a href="../invoice/history.php"
-                                                                        class="nav-link text-secondary">History</a>
-                                                        </li>
-                                                        <li class="nav-item mx-2" style="font-size: 15px;">
-                                                                <a href="#" class="nav-link text-secondary">Invoicing Guide</a>
-                                                        </li>
-                                                        <?php
-                                                }
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
 
-                                                ?>
+            function updateThemeIcon(theme) {
+                if (theme === 'dark') {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                } else {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+            }
 
-
-
-                                        </ul>
-
-                                        <div class="d-flex align-items-center">
-                                                <i class="fa-solid fa-language mx-3 text-secondary"></i>
-                                                <i class="fa-solid fa-sun mx-3 text-secondary"></i>
-
-
-
-                                                <?php
-
-                                                if (isset($_SESSION['email'])) {
-                                                        ?>
-                                                        <div class="profile mx-2 px-2 my-1">
-                                                                <div id="toggle" class="text-secondary"
-                                                                        style="cursor: pointer;">
-                                                                        <?php
-                                                                        require_once "../app/connect.php";
-
-                                                                        $connect = new connect();
-                                                                        $db = $connect->connect_db();
-
-                                                                        $em = $_SESSION['email'];
-                                                                        $sql = "SELECT `firstname`,`lastname` FROM `users` WHERE `email` = '$em'";
-                                                                        $res = $db->query($sql);
-
-                                                                        $row = $res->fetch_assoc();
-
-                                                                        echo $row['firstname'] . " " . $row['lastname'];
-                                                                        ?>
-
-                                                                        <span class="mx-1 fw-light text-secondary">
-                                                                                <i class="fa-solid fa-angle-down"></i>
-                                                                        </span>
-                                                                </div>
-
-                                                                <script>
-                                                                        document.addEventListener('DOMContentLoaded', function () {
-                                                                                const popover = new bootstrap.Popover(document.getElementById('toggle'), {
-                                                                                        content: '<div class="row d-flex fs-6 border-bottom pb-3"><a class="text-dark text-decoration-none" href="../invoice/account.php"><div clas="col-7 border"><span class="fw-bold d-block" style="fontsize: 20px;"><?php echo $row['firstname'] . " " . $row['lastname']; ?></span><span class="fw-normal text-secondary"><?php echo $_SESSION['email']; ?></span></div></a></div><div class="row d-flex align-items-center justify-content-center border-bottom py-2"><span class="fw-bold text-center m-auto" style="fontsize: 20px;"><a href="../auth/logout.php" class="text-danger fs-5 text-decoration-none">Logout</a></span></div>',
-                                                                                        // content: '<div class="">',
-                                                                                        html: true,
-                                                                                        placement: 'right',
-                                                                                        trigger: 'click'
-                                                                                });
-                                                                        });
-                                                                </script>
-                                                                
-                                                        </div>
-                                                        <?php
-                                                } else {
-                                                        ?>
-                                                        <a href="../../modules/auth/login.php" class="btn me-2">Sign In</a>
-                                                        <a href="../../modules/auth/signup.php"
-                                                                class="btn btn-success text-white">Sign Up</a>
-                                                        <?php
-                                                }
-                                                ?>
-
-                                        </div>
-                                </div>
+            // User profile popover
+            if (document.getElementById('toggle')) {
+                const toggleElement = document.getElementById('toggle');
+                const popover = new bootstrap.Popover(toggleElement, {
+                    content: `
+                        <div class="p-3">
+                            <a href="account.php"><div class="border-bottom pb-2 mb-2">
+                                <div class="fw-medium text-dark"><?php echo $row['firstname'] . " " . $row['lastname']; ?></div>
+                                <div class="text-secondary small"><?php echo $_SESSION['email']; ?></div>
+                            </div></a>
+                            <a href="../auth/logout.php" class="d-flex align-items-center gap-2 text-danger text-decoration-none">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span>Logout</span>
+                            </a>
                         </div>
-                </nav>
-        </header>
-
-        <script src="../assets/dynamic.js"></script>
-
+                    `,
+                    html: true,
+                    placement: 'bottom',
+                    trigger: 'click',
+                    customClass: 'shadow-lg',
+                    container: 'body',
+                    offset: [0, 10],
+                    popperConfig: {
+                        modifiers: [{
+                            name: 'preventOverflow',
+                            options: {
+                                boundary: document.body
+                            }
+                        }]
+                    }
+                });
+            }
+        });
+    </script>
 </body>
-
 </html>

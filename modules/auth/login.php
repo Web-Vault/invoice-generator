@@ -1,5 +1,4 @@
 <?php
-
 require_once "../app/user.php";
 
 if (isset($_SERVER['REQUEST_METHOD']) == 'POST' && isset($_POST['login'])) {
@@ -11,171 +10,189 @@ if (isset($_SERVER['REQUEST_METHOD']) == 'POST' && isset($_POST['login'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>SignIn - Invoice Generator</title>
+        <title>Sign In | Invoice Generator</title>
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-                integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-                crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-                crossorigin="anonymous"></script>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-                crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-                integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-                crossorigin="anonymous"></script>
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-                integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
-                crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
-        <script src="https://code.jquery.com/jquery-3.7.1.js"
-                integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-
+        <!-- Custom CSS -->
         <style>
+                :root {
+                        --primary-color: #1a56db;
+                        --background-color: #f9fafb;
+                        --border-color: #e5e7eb;
+                        --hover-color: #1e40af;
+                }
+
                 body {
-                        background-color: #f9f9f9 !important;
+                        background-color: #F3F4F6;
+                        font-family: 'Inter', sans-serif;
                 }
 
-                .main-body {
-                        background-color: #fff !important;
-                        border-radius: 0.71rem;
-                        border: 1px solid #eee;
-                        /* box-shadow: 0px 6px 8px 2px rgba(0, 0, 0, 0.1); */
+                .auth-container {
+                        min-height: 100vh;
+                        padding: 2rem 1rem;
                 }
 
-                .input>input {
-                        border: 1px solid #ddd;
-                        height: 40px;
-                        border-radius: 5px;
+                .auth-card {
+                        background: white;
+                        border-radius: 1rem;
+                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                        max-width: 450px;
+                        width: 100%;
+                        padding: 2.5rem;
                 }
 
-                .text {
-                        font-size: 14.3px;
+                .auth-header {
+                        text-align: center;
+                        margin-bottom: 2rem;
                 }
 
-                input[type="checkbox"]:checked {
-                        background-color: #4CAF50 !important;
+                .auth-header img {
+                        /* height: 50px; */
+                        width: 100%;
+                        margin-bottom: 1.5rem;
+                }
 
+                .form-control {
+                        border: 1px solid var(--border-color);
+                        padding: 0.75rem 1rem;
+                        border-radius: 0.5rem;
+                        font-size: 0.95rem;
+                }
+
+                .form-control:focus {
+                        border-color: var(--primary-color);
+                        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+                }
+
+                .btn-primary {
+                        background-color: var(--primary-color);
+                        border: none;
+                        padding: 0.75rem;
+                        font-weight: 500;
+                }
+
+                .btn-primary:hover {
+                        background-color: var(--hover-color);
+                }
+
+                .btn-google {
+                        border: 1px solid var(--border-color);
+                        padding: 0.75rem;
+                        font-weight: 500;
+                }
+
+                .error-text {
+                        color: #DC2626;
+                        font-size: 0.875rem;
+                        margin-top: 0.25rem;
                 }
         </style>
 </head>
 
-<body style="backgound-color: #d1d1d1;">
-        <div class="container main d-flex flex-column justify-content-center align-items-center min-vh-100">
-                <div class="head-logo w-100 text-center my-4">
-                        <img src="../../assets/invoice_img.png" alt="logo" class="img" height="45">
-                </div>
+<body>
+        <div class="container auth-container d-flex align-items-center justify-content-center">
+                <div class="auth-card">
+                        <div class="auth-header d-flex align-items-center justify-content-center gap-3">
 
-                <div class="main-body p-4 bg-white rounded-3 shadow-sm w-100" style="max-width: 500px;">
-                        <p class="head-text fs-2 text-dark fw-semibold text-center">Sign In</p>
-                        <p class="head-sub-text fw-normal text-secondary text-center" style="font-size: 14.6px;">
-                                Welcome back!
-                        </p>
+                                <img src="../../assets/173745502034560481.png" alt="Invoice Generator" class="img-fluid"
+                                        style="height: 70px; width: auto;">
 
-                        <form id="login" action="" method="post" class="form">
+                                <div>
+                                        <h1 class="h4 mb-2">Welcome Back</h1>
+                                        <p class="text-muted">Sign in to your account</p>
+                                </div>
+                        </div>
 
-                                <div class="mb-3">
-                                        <label for="email" class="form-label text-dark fw-normal">Email</label>
-                                        <input type="email" name="email" id="email" class="form-control">
-                                        <span class="text-danger" style="font-size: 15px;" id="email_err"></span>
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="login" name="loginForm" method="post">
+                                <?php
+                                $email_err = $pass_err = "";
+                                $email = $password = "";
+
+                                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                                    // Validate email
+                                    if (empty(trim($_POST["email"]))) {
+                                        $email_err = "Email is required";
+                                    } elseif (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
+                                        $email_err = "Please enter a valid email address";
+                                    } else {
+                                        $email = trim($_POST["email"]);
+                                    }
+
+                                    // Validate password
+                                    if (empty(trim($_POST["password"]))) {
+                                        $pass_err = "Password is required";
+                                    } else {
+                                        $password = trim($_POST["password"]);
+                                    }
+
+                                    // If no errors, process login
+                                    if (empty($email_err) && empty($pass_err)) {
+                                        require_once "../app/user.php";
+                                        $user = new User();
+                                        $user->login($email, $password);
+                                    }
+                                }
+                                ?>
+                                <div class="mb-4">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" name="email" id="email" class="form-control <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>"
+                                                placeholder="name@company.com" value="<?php echo $email; ?>">
+                                        <span class="error-text"><?php echo $email_err; ?></span>
                                 </div>
 
-                                <div class="mb-3">
-                                        <div class="d-flex justify-content-between">
-                                                <label for="password"
-                                                        class="form-label text-dark fw-normal">Password</label>
-                                                <a href="#" class="text-secondary text-decoration-none">Forgot
+                                <div class="mb-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <label class="form-label mb-0">Password</label>
+                                                <a href="f_pass.php" class="text-primary text-decoration-none small">Forgot
                                                         Password?</a>
                                         </div>
-                                        <input type="password" name="password" id="password" class="form-control">
-                                        <span class="text-danger" style="font-size: 15px;" id="pass_err"></span>
+                                        <input type="password" name="password" id="password" class="form-control <?php echo (!empty($pass_err)) ? 'is-invalid' : ''; ?>"
+                                                placeholder="••••••••">
+                                        <span class="error-text"><?php echo $pass_err; ?></span>
                                 </div>
 
-                                <div class="form-check mb-3">
-                                        <input type="checkbox" class="form-check-input" id="keep" name="keep">
-                                        <label for="keep" class="form-check-label text-secondary">Keep me logged
-                                                in</label>
+                                <div class="mb-4">
+                                        <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="keep" name="keep">
+                                                <label class="form-check-label text-muted" for="keep">Keep me signed
+                                                        in</label>
+                                        </div>
                                 </div>
 
-                                <button type="submit" name="login" id="login" class="btn btn-success w-100 py-2">Sign
-                                        In</button>
+                                <button type="submit" name="login" class="btn btn-primary w-100 mb-3">Sign In</button>
 
-                                <div class="d-flex justify-content-center mt-3">
-                                        <button type="button"
-                                                class="btn btn-light text-secondary fw-semibold w-100 py-2">
-                                                <i class="fa-brands fa-google"></i> Sign in with Google
-                                        </button>
-                                </div>
+                                <!-- <button type="button" class="btn btn-google w-100 mb-4">
+                                        <i class="fab fa-google me-2"></i>Sign in with Google
+                                </button> -->
 
-                                <p class="py-2 text-secondary text-center fs-6">
-                                        Don't have an account yet?
-                                        <a href="signup.php" class="text-success text-decoration-none">Sign Up</a>
+                                <p class="text-center text-muted mb-0">
+                                        Don't have an account?
+                                        <a href="signup.php" class="text-primary text-decoration-none">Create
+                                                account</a>
                                 </p>
                         </form>
-
-                        <script>
-
-                                function clearErrors() {
-                                        document.getElementById("email_err").textContent = "";
-                                        document.getElementById("pass_err").textContent = "";
-                                }
-
-                                document.getElementById('login').addEventListener("submit", function (e) {
-                                        e.preventDefault();
-
-                                        clearErrors();
-
-                                        let email = document.getElementById("email").value.trim();
-                                        let password = document.getElementById("password").value.trim();
-
-                                        let valid = true;
-
-                                        if (email === "") {
-                                                document.getElementById("email_err").textContent = "Email cannot be empty";
-                                                valid = false;
-                                        } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
-                                                document.getElementById("email_err").textContent = "Invalid email format";
-                                                valid = false;
-                                        }
-
-                                        if (password === "") {
-                                                document.getElementById("pass_err").textContent = "Password cannot be empty";
-                                                valid = false;
-                                        }
-
-                                        if (valid) {
-
-                                                <?php
-
-                                                $email = $_POST['email'];
-                                                $pass = $_POST['password'];
-
-                                                // echo $email;
-                                                
-                                                $new = new user();
-                                                $new->login($email, $pass);
-
-                                                exit;
-                                                ?>
-                                        }
-                                });
-
-
-                        </script>
 
                 </div>
         </div>
 
+
+
+        <!-- Bootstrap Bundle JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

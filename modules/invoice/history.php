@@ -1,9 +1,59 @@
 <?php include_once "../../includes/header.php"; ?>
 
 <style>
-        .fff,
-        header {
-                background-color: #fff !important;
+        :root {
+            --primary-color: #1a56db;
+            --secondary-color: #4b5563;
+            --background-color: #f9fafb;
+            --border-color: #e5e7eb;
+            --text-color: #111827;
+            --hover-color: #1e40af;
+            --accent-color: #3b82f6;
+        }
+
+        :root[data-theme="dark"] {
+            --primary-color: #60a5fa;
+            --secondary-color: #9ca3af;
+            --background-color: #111827;
+            --border-color: #374151;
+            --text-color: #f9fafb;
+            --hover-color: #3b82f6;
+            --accent-color: #60a5fa;
+        }
+
+        .fff {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .input-group {
+            background-color: var(--background-color);
+        }
+
+        .input-group-text {
+            background-color: var(--background-color) !important;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .form-control::placeholder {
+            color: var(--secondary-color);
+        }
+
+        .text-secondary {
+            color: var(--secondary-color) !important;
+        }
+
+        a {
+            color: var(--primary-color);
+        }
+
+        a:hover {
+            color: var(--hover-color);
         }
 </style>
 
@@ -25,7 +75,7 @@
                 <div class="buttons col-6 d-flex justify-content-end">
                         <!-- <button class="btn btn-md btn-outline-secondary py-2 mx-3"><i
                                         class="fa-solid fa-download"></i>Export</button> -->
-                        <button class="btn btn-md btn-success py-2 my-3"><a href="create.php"
+                        <button class="btn btn-md btn-primary py-2 my-3"><a href="create.php"
                                         class="text-white text-decoration-none"> New Invoice </a></button>
 
                 </div>

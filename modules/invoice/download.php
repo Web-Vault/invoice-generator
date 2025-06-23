@@ -1,135 +1,155 @@
 <?php
 require_once "../app/invoice.php";
-require_once "../dompdf/autoload.inc.php";
+// require_once "../dompdf/autoload.inc.php";
 
 $invoice = new Invoice();
-
 $invoice_id = $_REQUEST['invoice_id'];
 $invoice_data = $invoice->fetch_invoice($invoice_id);
 
+$uid = $invoice_data['user_id'];
+$fetch_visibility = "SELECT * FROM `visibility` WHERE `user_id` = $uid";
+$res = $db->query($fetch_visibility);
 
-
-// 
-require_once "../app/invoice.php";
-require_once "../dompdf/autoload.inc.php";
-
+if ($res) {
+    $row_visibility = $res->fetch_assoc();
+    $fields = explode(",", $row_visibility['field_visibility']);
+}
 
 $html = '
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice</title>
+    <title>Invoice #' . htmlspecialchars($invoice_data['invoice_number']) . '</title>
 </head>
+<body style="margin: 0; padding: 0; font-family: \'Helvetica Neue\', Arial, sans-serif; color: #334155; line-height: 1.4; font-size: 14px;">
+    <div style="max-width: 800px; margin: 0 auto; background: #ffffff; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+        
+        <!-- Header Section -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <tr>';
 
-<body style="background-color: #f8f9fa; font-family: Arial, sans-serif; line-height: 1.3; margin: 0; padding: 0; box-sizing: border-box;">
-    <div style="width: 100%; max-width: 1200px; padding: 10px 20px; background-color: #fff; border-radius: 10px;">
-        <div style="display: table; width: 100%; margin-bottom: 20px;">
-                <div style="display: table-cell; width: 50%; vertical-align: middle;">
-                        <img src="data:image/png;base64company_logo/' . htmlspecialchars($invoice_data['invoice_logo']) . '" style="max-height: 100px;" />
-                </div>
-                <div style="display: table-cell; width: 50%; text-align: right; vertical-align: middle;">
-                        <h1 style="font-size: 32px; color: #333; margin-top: 7px;">' . htmlspecialchars($invoice_data['company_name']) . '</h1>
-                        <p style="font-size: 16px; color: #777; margin-top: 7px;">#' . htmlspecialchars($invoice_data['invoice_number']) . '</p>
-                </div>
-        </div>
-
-        <div style="display: table; width: 100%; margin-top: 30px;">
-                <div style="display: table-cell; width: 50%; vertical-align: middle;">
-                        <div style="font-weight: bold; color: #333;">From</div>
-                        <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['invoice_from']) . '</div>
-                </div>
-                <div style="display: table-cell; width: 50%; vertical-align: middle; text-align: right;">
-                        <div style="font-weight: bold; color: #333;">To</div>
-                        <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['bill_to']) . '</div>
-                </div>
-        </div>
-
-        <div style="display: table; width: 100%; margin-top: 30px;">
-                <div style="display: table-cell; width: 50%; vertical-align: middle;">
-                        <div style="font-weight: bold; color: #333;">Ship To</div>
-                        <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['ship_to']) . '</div>
-                </div>
-                <div style="display: table-cell; width: 50%; vertical-align: middle;  text-align: right;">
-                        <div style="font-weight: bold; color: #333;">Date</div>
-                        <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['invoice_date']) . '</div>
-                </div>
-        </div>
-
-        <div style="margin-top: 20px;">
-                <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
-                        <thead>
-                                <tr>
-                                        <th style="padding: 12px; text-align: left; background-color: #f9f9f9;">Item</th>
-                                        <th style="padding: 12px; text-align: left; background-color: #f9f9f9; text-align: end;">Quantity</th>
-                                        <th style="padding: 12px; text-align: left; background-color: #f9f9f9; text-align: end;">Rate</th>
-                                        <th style="padding: 12px; text-align: left; background-color: #f9f9f9; text-align: end;">Amount</th>
-                                </tr>
-                        </thead>
-                        <tbody>';
-
-foreach ($invoice_data['items'] as $item) {
-        $html .= '
-                        <tr>
-                                <td style="font-size: 14px; color: #555; padding: 12px;">' . htmlspecialchars($item['item_name']) . '</td>
-                                <td style="font-size: 14px; color: #555; padding: 12px; text-align: end;">' . htmlspecialchars($item['item_quantity']) . '</td>
-                                <td style="font-size: 14px; color: #555; padding: 12px; text-align: end;">$' . htmlspecialchars(number_format($item['item_amount'], 2)) . '</td>
-                                <td style="font-size: 14px; color: #555; padding: 12px; text-align: end;">$' . htmlspecialchars(number_format($item['item_total'], 2)) . '</td>
-                        </tr>';
+if (!in_array("invoice_logo", $fields) && !empty($invoice_data['invoice_logo']) || 
+    (in_array("invoice_logo", $fields) && !empty($invoice_data['invoice_logo']))) {
+    $html .= '<td style="width: 50%; vertical-align: top; padding: 5px;">
+                    <img src="company_logo/' . htmlspecialchars($invoice_data['invoice_logo']) . '" alt="Company Logo" style="height: 100px; display: block; margin: 0;">
+              </td>';
 }
 
+$html .= '<td style="width: 50%; text-align: right; padding: 5px;">
+            <h1 style="margin: 0; color: #1e40af; font-size: 24px; font-weight: 700;">' . htmlspecialchars($invoice_data['company_name']) . '</h1>
+            <p style="margin: 3px 0 0; color: #64748b; font-size: 15px;">Invoice #' . htmlspecialchars($invoice_data['invoice_number']) . '</p>
+            <p style="margin: 0; color: #64748b;">Date: ' . htmlspecialchars($invoice_data['invoice_date']) . '</p>
+          </td>
+        </tr>
+        </table>';
+
 $html .= '
-                        </tbody>
-                </table>
+        <!-- Billing Information -->
+        <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+            <tr>
+                <td style="width: 50%; padding-right: 15px; vertical-align: top;">
+                    <h3 style="margin: 0 0 5px; color: #1e40af; font-size: 16px;">From</h3>
+                    <p style="margin: 0; color: #475569;">' . nl2br(htmlspecialchars($invoice_data['invoice_from'])) . '</p>
+                </td>
+            </tr>
+            <br />
+            <tr>
+                <td style="width: 50%; vertical-align: top;">
+                    <h3 style="margin: 0 0 5px; color: #1e40af; font-size: 16px;">Bill To</h3>
+                    <p style="margin: 0; color: #475569;">' . nl2br(htmlspecialchars($invoice_data['bill_to'])) . '</p>
+                    <p style="margin: 0; color: #475569;">' . nl2br(htmlspecialchars($invoice_data['ship_to'])) . '</p>
+                </td>
+            </tr>
+        </table>
 
-                <div style="text-align: right; padding: 20px;">
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Subtotal</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['subtotal'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Discount</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['discount'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Tax</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['tax_charge'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Shipping</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['shipping_charge'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block; font-weight: bold;">Total</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right; font-weight: bold;">$' . htmlspecialchars(number_format($invoice_data['total_amount'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block;">Amount Paid</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right;">$' . htmlspecialchars(number_format($invoice_data['paid_amount'], 2)) . '</span>
-                        </div>
-                        <div style="padding: 8px 0;  display: block; width: 100%;">
-                                <span style="font-weight: bold; color: #333; width: 40%; display: inline-block; font-weight: bold;">Balance Due</span>
-                                <span style="color: #333; width: 40%; display: inline-block; text-align: right; font-weight: bold;">$' . htmlspecialchars(number_format($invoice_data['remainig_amount'], 2)) . '</span>
-                        </div>
-                </div>
-        </div>
+        <!-- Items Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+                <tr style="background: #f1f5f9;">
+                    <th style="padding: 10px; text-align: left; font-size: 14px; border-bottom: 2px solid #e2e8f0; color: #1e40af;">Item</th>
+                    <th style="padding: 10px; text-align: right; font-size: 14px; border-bottom: 2px solid #e2e8f0; color: #1e40af;">Qty</th>
+                    <th style="padding: 10px; text-align: right; font-size: 14px; border-bottom: 2px solid #e2e8f0; color: #1e40af;">Rate</th>
+                    <th style="padding: 10px; text-align: right; font-size: 14px; border-bottom: 2px solid #e2e8f0; color: #1e40af;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>';
 
-        <div style="margin-top: 20px;">
-                <div style="font-weight: bold; color: #333;">Notes</div>
-                <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['notes']) . '</div>
-        </div>
+foreach ($invoice_data['items'] as $item) {
+    $html .= '<tr>
+                <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; color: #475569;">' . htmlspecialchars($item['item_name']) . '</td>
+                <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #475569;">' . htmlspecialchars($item['item_quantity']) . '</td>
+                <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #475569;">' . htmlspecialchars(number_format($item['item_amount'], 2)) . '</td>
+                <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #475569;">' . htmlspecialchars(number_format($item['item_total'], 2)) . '</td>
+              </tr>';
+}
 
-        <div style="margin-top: 20px;">
-                <div style="font-weight: bold; color: #333;">Terms</div>
-                <div style="font-size: 14px; color: #555;">' . htmlspecialchars($invoice_data['terms']) . '</div>
-        </div>
+$html .= '</tbody>
+        </table>
+
+        <!-- Summary Section -->
+        <div style="margin-left: auto; width: 300px; text-align: right; background: #f8fafc; padding: 15px; border-radius: 8px;">';
+
+$html .= '<div style="display: flex; justify-content: space-between; padding: 5px 0;">
+            <span style="color: #64748b;">Subtotal</span>
+            <span style="color: #475569; font-weight: 500;">' . htmlspecialchars(number_format($invoice_data['subtotal'], 2)) . '</span>
+          </div>';
+
+if (!empty($invoice_data['discount']) || $invoice_data['discount'] != 0.00 || !in_array("discount", $fields)) {
+    $html .= '<div style="display: flex; justify-content: space-between; padding: 5px 0;">
+                <span style="color: #64748b;">Discount</span>
+                <span style="color: #dc2626;">-' . htmlspecialchars(number_format($invoice_data['discount'], 2)) . '</span>
+              </div>';
+}
+
+if (!empty($invoice_data['tax_charge']) || $invoice_data['tax_charge'] != 0.00 || !in_array("tax_charge", $fields)) {
+    $html .= '<div style="display: flex; justify-content: space-between; padding: 5px 0;">
+                <span style="color: #64748b;">Tax</span>
+                <span style="color: #475569;">+' . htmlspecialchars(number_format($invoice_data['tax_charge'], 2)) . '%</span>
+              </div>';
+}
+
+$html .= '<div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid #e2e8f0; margin-top: 5px;">
+            <span style="color: #1e40af; font-weight: 600;">Total</span>
+            <span style="color: #1e40af; font-weight: 600;">' . htmlspecialchars(number_format($invoice_data['total_amount'], 2)) . '</span>
+          </div>';
+
+if ((!in_array("paid_amount", $fields) && !empty($invoice_data['paid_amount'])) || 
+    (in_array("paid_amount", $fields) && !empty($invoice_data['paid_amount']))) {
+    $html .= '<div style="display: flex; justify-content: space-between; padding: 5px 0;">
+                <span style="color: #64748b;">Amount Paid</span>
+                <span style="color: #059669;"> -' . htmlspecialchars(number_format($invoice_data['paid_amount'], 2)) . '</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 5px 0; font-weight: bold;">
+                <span style="color: #1e40af;">Balance Due</span>
+                <span style="color: #dc2626;">' . htmlspecialchars(number_format($invoice_data['remainig_amount'], 2)) . '</span>
+              </div>';
+}
+
+$html .= '</div>';
+
+if ((!in_array("notes", $fields) && !empty($invoice_data['notes'])) || 
+    (in_array("notes", $fields) && !empty($invoice_data['notes']))) {
+    $html .= '<div style="margin-top: 20px; font-size: 13px; background: #f8fafc; padding: 15px; border-radius: 8px;">
+                <h3 style="margin: 0 0 5px; font-size: 14px; color: #1e40af;">Notes</h3>
+                <p style="margin: 0; color: #475569;">' . htmlspecialchars($invoice_data['notes']) . '</p>
+              </div>';
+}
+
+if ((!in_array("terms", $fields) && !empty($invoice_data['terms'])) || 
+    (in_array("terms", $fields) && !empty($invoice_data['terms']))) {
+    $html .= '<div style="margin-top: 10px; font-size: 13px; background: #f8fafc; padding: 15px; border-radius: 8px;">
+                <h3 style="margin: 0 0 5px; font-size: 14px; color: #1e40af;">Terms & Conditions</h3>
+                <p style="margin: 0; color: #475569;">' . htmlspecialchars($invoice_data['terms']) . '</p>
+              </div>';
+}
+
+$html .= '<div style="margin-top: 20px; text-align: center; font-size: 13px; color: #64748b;">
+            <p style="margin: 0;">All amounts are in ' . htmlspecialchars($invoice_data['currency']) . '</p>
+          </div>
     </div>
 </body>
-
 </html>';
-
-// echo $html;
 
 $invoice->download($html);

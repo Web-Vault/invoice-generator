@@ -1,0 +1,27 @@
+pending task in invoice generator
+
+
+1. dynamic subtotal counter.
+2. guest invoice download
+3. admin panel.
+
+
+        admin dashboard. 
+                total user number
+                total invoice number
+                list of last 3 new users
+                list of last 3 invoices
+
+        users page
+                add new user
+                delete user
+                list of all users. with edit button and view invoice button
+                edit form for editting user personal info
+
+        view single invoice page  
+                temp.php clone.
+
+        invoice page
+                list of all invoive. filter by user. - dynamic dropdown for active users
+                view button for single invoice view.
+                pagination

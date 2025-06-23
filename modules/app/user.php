@@ -35,9 +35,15 @@ class user implements UserInterface
                         if ($res->num_rows == 0) {
                                 $this->add_user();
                         } else {
-                                echo "<script>alert('Email already in use! please enter a new one.');</script>";
-                                header("Location: signup.php");
-                                exit;
+                                if (!$_SESSION['admin']) {
+                                        echo "<script>alert('Email already in use! please enter a new one.');</script>";
+                                        // header("Location: ../modules/auth/login.php");
+                                        echo "<script>window.location.href='../auth/signup.php';</script>";
+                                        exit;
+                                } else {
+                                        header("Location: ../admin/users.php");
+                                        exit;
+                                }
                         }
                 }
         }
@@ -60,11 +66,10 @@ class user implements UserInterface
 
                         if ($res) {
                                 // echo "user added successfully";
-                                ?>
 
-                                <?php
-
-                                header("Location: login.php");
+                                echo "<script>window.location.href='../auth/login.php';</script>";
+                                // header("Location: ../modules/auth/login.php");
+                                // exit;
                         }
                 } else {
                         echo "error in connection. please try again!";
@@ -78,7 +83,7 @@ class user implements UserInterface
 
                 // echo $email . "<br>" . $pass;
 
-                $sql = "SELECT * FROM `users` WHERE `email` = '$email'";
+                $sql = "SELECT * FROM `users` WHERE `email` = '$email'"; // change table name
                 $res = $db->query($sql);
 
                 if ($res->num_rows > 0) {
@@ -90,24 +95,46 @@ class user implements UserInterface
 
                                 $_SESSION['email'] = $user['email'];
                                 $_SESSION['user_id'] = $user['id'];
+                                $fields = "invoice_number";
 
-                                header('Location: ../invoice/create.php');
-                                exit;
+                                $user_id = $user['id'];
+
+                                $sql = "INSERT INTO `visibility`(`user_id`, `field_visibility`) VALUES ($user_id, '$fields')";
+                                $res = $db->query($sql);
+
+                                // if ($row['status'] == "active") {
+
+                                if ($res) {
+                                        header('Location: ../invoice/create.php'); // path to home page.
+                                        exit;
+                                }
+
+                                // } else {
+                                
+                                        // window.location.href == "login.php";
+
+                                // }
 
                         } else {
                                 echo "<script>alert('Invalid password! Try again');</script>";
                         }
+                } else if ($email == "admin@invoice.com") { // admin email replacement
+                        $_SESSION['admin'] = $email;
+                        header("Location: ../../admin/index.php"); // path to admin dashboard                
+                        exit;
                 } else {
                         echo "<script>alert('No user found with this email.');</script>";
                 }
         }
 
-        public function update_profile($new_email = "", $new_pass = "")
+        public function update_profile($new_email = "", $new_pass = "", $user_id = 0)
         {
                 $connect = new connect();
                 $db = $connect->connect_db();
 
-                $user_id = $_SESSION['user_id'];
+                if ($user_id == 0) {
+                        $user_id = $_SESSION['user_id'];
+                }
 
                 $new_email = $db->real_escape_string($new_email);
                 $new_pass = $new_pass ? password_hash($new_pass, PASSWORD_BCRYPT) : "";
@@ -122,15 +149,19 @@ class user implements UserInterface
                         }
                 }
 
-                if (!empty($new_email) && !empty($new_pass)) {
-                        $update_sql = "UPDATE `users` SET `email` = '$new_email', `password` = '$new_pass' WHERE `id` = $user_id";
-                } elseif (!empty($new_email)) {
-                        $update_sql = "UPDATE `users` SET `email` = '$new_email' WHERE `id` = $user_id";
-                } elseif (!empty($new_pass)) {
-                        $update_sql = "UPDATE `users` SET `password` = '$new_pass' WHERE `id` = $user_id";
-                } else {
-                        echo "<script>alert('Nothing to update');</script>";
-                        return;
+                switch (true) {
+                        case (!empty($new_email) && !empty($new_pass)):
+                                $update_sql = "UPDATE `users` SET `email` = '$new_email', `password` = '$new_pass' WHERE `id` = $user_id";
+                                break;
+                        case (!empty($new_email)):
+                                $update_sql = "UPDATE `users` SET `email` = '$new_email' WHERE `id` = $user_id";
+                                break;
+                        case (!empty($new_pass)):
+                                $update_sql = "UPDATE `users` SET `password` = '$new_pass' WHERE `id` = $user_id";
+                                break;
+                        default:
+                                echo "<script>alert('Nothing to update');</script>";
+                                return;
                 }
 
                 if ($db->query($update_sql)) {
@@ -143,12 +174,14 @@ class user implements UserInterface
                 }
         }
 
-        public function update_name($firstname = "", $lastname = "")
+        public function update_name($firstname = "", $lastname = "", $user_id = 0)
         {
                 $connect = new connect();
                 $db = $connect->connect_db();
 
-                $user_id = $_SESSION['user_id'];
+                if ($user_id == 0) {
+                        $user_id = $_SESSION['user_id'];
+                }
 
                 $firstname = $db->real_escape_string($firstname);
                 $lastname = $db->real_escape_string($lastname);
@@ -160,11 +193,15 @@ class user implements UserInterface
                         $update_both = "UPDATE `users` SET `firstname` = '$firstname', `lastname` = '$lastname' WHERE `id` = $user_id";
                         if ($db->query($update_both)) {
                                 echo "<script>alert('First and last name updated successfully');</script>";
-                                ?>
-                                <script>
-                                        window.location.href = "../invoice/account.php";
-                                </script>
-                                <?php
+                                if ($user_id == 0) {
+                                        header("Location: ../modules/invoice/account.php");
+                                        exit;
+                                } else {
+                                        // header("Location: users.php");
+                                        echo "<script>window.location.href='users.php';</script>";
+                                }
+                                exit;
+
                         } else {
                                 echo "<script>alert('Error updating first and last name');</script>";
                         }
@@ -173,7 +210,40 @@ class user implements UserInterface
                 }
         }
 
+        public function fetch_all()
+        {
 
+                $connect = new connect();
+                $db = $connect->connect_db();
+
+                $sql = "SELECT * FROM `users`";
+                $res = $db->query($sql);
+
+                if ($res) {
+                        return $res;
+                } else {
+                        return "Oops! No Users Found..";
+                }
+        }
+
+        public function fetch_user_invoice($user_id)
+        {
+
+                $connect = new connect();
+                $db = $connect->connect_db();
+
+                $sql = "SELECT count(*) as invoice_count FROM `invoice` WHERE `user_id` = $user_id";
+                $res = $db->query($sql);
+
+                if ($res) {
+                        $row = $res->fetch_assoc();
+
+                        return $row['invoice_count'];
+                } else {
+                        return 0;
+                }
+
+        }
 
         // public function delete_acc($id)
         // {
@@ -193,6 +263,47 @@ class user implements UserInterface
         //         }
 
         // }
+
+
+        public function fetch_one($user_id)
+        {
+
+                $connect = new connect();
+                $db = $connect->connect_db();
+
+                $sql = "SELECT * FROM `users` WHERE `id` = $user_id";
+                $res = $db->query($sql);
+
+                if (!empty($res)) {
+                        $row = $res->fetch_assoc();
+                        return $row;
+                } else {
+                        return "No UserData Available";
+                }
+        }
+
+        public function change_pass($email, $pass)
+        {
+                $connect = new connect();
+                $db = $connect->connect_db();
+
+                // echo $email;
+                // echo $pass;
+
+                $hashed = password_hash($pass, PASSWORD_BCRYPT);
+
+                // echo $hashed;
+                $new = "";
+
+                $sql = "UPDATE `users` SET `password` = '$hashed' WHERE `email` = '$email', 'reset_token' = '$new'";
+                $res = $db->query($sql);
+                if ($res) {
+                        echo "<script>alert('Password changed successfully');</script>";
+                        echo "<script>window.location.href='../auth/login.php';</script>";
+                } else {
+                        echo "<script>alert('Error changing password');</script>";
+                }
+        }
 }
 
 ?>
